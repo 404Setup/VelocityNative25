@@ -109,19 +109,31 @@ public class FfmapiVelocityCompressor implements VelocityCompressor {
       throw new IllegalArgumentException("Invalid compression level " + level);
     }
 
-    try {
-      this.inflateCtx = (MemorySegment) INFLATE_INIT.invokeExact();
-      this.deflateCtx = (MemorySegment) DEFLATE_INIT.invokeExact(correctedLevel);
+    MemorySegment tempInflate = MemorySegment.NULL;
+    MemorySegment tempDeflate = MemorySegment.NULL;
 
-      if (this.inflateCtx.equals(MemorySegment.NULL)) {
+    try {
+      tempInflate = (MemorySegment) INFLATE_INIT.invokeExact();
+      if (tempInflate.equals(MemorySegment.NULL)) {
         throw new RuntimeException("Failed to initialize inflate context");
       }
-      if (this.deflateCtx.equals(MemorySegment.NULL)) {
+
+      tempDeflate = (MemorySegment) DEFLATE_INIT.invokeExact(correctedLevel);
+      if (tempDeflate.equals(MemorySegment.NULL)) {
         throw new RuntimeException("Failed to initialize deflate context");
       }
     } catch (Throwable e) {
+      if (!MemorySegment.NULL.equals(tempInflate)) {
+        try {
+          INFLATE_FREE.invokeExact(tempInflate);
+        } catch (Throwable ignored) {
+        }
+      }
       throw new RuntimeException("Error invoking native initialization", e);
     }
+
+    this.inflateCtx = tempInflate;
+    this.deflateCtx = tempDeflate;
   }
 
   @Override
@@ -202,19 +214,14 @@ public class FfmapiVelocityCompressor implements VelocityCompressor {
   @Override
   public void close() {
     if (!disposed) {
-      try {
-        INFLATE_FREE.invokeExact(inflateCtx);
-        DEFLATE_FREE.invokeExact(deflateCtx);
-      } catch (Throwable e) {
-        // Swallow error on close to match JNI behavior, but logging would be good practice
-      }
+      try {INFLATE_FREE.invokeExact(inflateCtx);} catch (Throwable _) {}
+      try {DEFLATE_FREE.invokeExact(deflateCtx);} catch (Throwable _) {}
       disposed = true;
     }
   }
 
   @Override
   public BufferPreference preferredBufferType() {
-    // FFM calls via MemorySegment.ofAddress require direct memory access
     return BufferPreference.DIRECT_REQUIRED;
   }
 }
