@@ -19,7 +19,6 @@ package com.velocitypowered.natives.util;
 
 import com.google.common.collect.ImmutableList;
 import com.velocitypowered.natives.NativeSetupException;
-import com.velocitypowered.natives.compression.FfmapiVelocityCompressor;
 import com.velocitypowered.natives.compression.JavaVelocityCompressor;
 import com.velocitypowered.natives.compression.LibdeflateVelocityCompressor;
 import com.velocitypowered.natives.compression.VelocityCompressorFactory;
@@ -84,17 +83,17 @@ public class Natives {
           new NativeCodeLoader.Variant<>(NativeConstraints.WINDOWS_X86_64,
             copyAndLoadNative("/windows_x86_64/recastxz.dll"),
               "RecastXZ 2 (Windows x86_64)",
-              FfmapiVelocityCompressor.FACTORY), // compiled with Windows 26120.4441 && MSVC 14
+              LibdeflateVelocityCompressor.FACTORY), // compiled with Windows 26120.4441 && MSVC 14
 
           new NativeCodeLoader.Variant<>(NativeConstraints.WINDOWS_AARCH64,
             copyAndLoadNative("/windows_aarch64/recastxz.dll"),
               "RecastXZ 2 (Windows aarch64)",
-              FfmapiVelocityCompressor.FACTORY), // compiled with Windows 26120.4441 && MSVC 14
+              LibdeflateVelocityCompressor.FACTORY), // compiled with Windows 26120.4441 && MSVC 14
 
           new NativeCodeLoader.Variant<>(NativeConstraints.LINUX_X86_64_RECAST,
             copyAndLoadNative("/linux_x86_64/librecastxz.so"),
               "RecastXZ (Linux x86_64)",
-              FfmapiVelocityCompressor.FACTORY), // compiled with Ubuntu 22.04
+              LibdeflateVelocityCompressor.FACTORY), // compiled with Ubuntu 22.04
 
           new NativeCodeLoader.Variant<>(NativeConstraints.LINUX_X86_64,
               copyAndLoadNative("/linux_x86_64/velocity-compress.so"),

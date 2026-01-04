@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "one.pkg.velocity_rc"
-version = "3.4.0-J25-SNAPSHOT"
+version = "3.4.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -24,7 +24,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
 }
 
-val targetJavaVersion = 25
+val targetJavaVersion = 17
 
 java {
     val javaVersion = JavaVersion.toVersion(targetJavaVersion)
@@ -68,8 +68,8 @@ mavenPublishing {
     coordinates(group as String, "velocity-native", version as String)
 
     pom {
-        name.set("Velocity Native J25")
-        description.set("Velocity Native J25")
+        name.set("Velocity Native")
+        description.set("Velocity Native")
         inceptionYear.set("2025")
         url.set("https://github.com/404Setup/VelocityNative25")
         licenses {
