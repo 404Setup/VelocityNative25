@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.guava:guava:33.5.0-jre")
+    implementation("com.google.guava:guava:25.1-jre")
     implementation("org.yaml:snakeyaml:2.4")
     implementation("io.netty:netty-handler:4.2.7.Final")
     implementation("org.checkerframework:checker-qual:3.42.0")
